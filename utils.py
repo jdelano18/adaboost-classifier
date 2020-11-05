@@ -8,9 +8,14 @@ def parse_filename():
     """
     parser = argparse.ArgumentParser(description="AdaBoost classifier",
                                      formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("data", type=str, help="path to .arff file")
+    parser.add_argument("filename", type=str, help="path to .arff file")
+    parser.add_argument("-K", "--k_folds", metavar="\b", type=int, default=None,
+                        help="k-fold cross validation")
+
+    parser.add_argument("-T", metavar="\b", type=int, default=100,
+                        help="number of iterations")
     args = vars(parser.parse_args())
-    return args["data"]
+    return args
 
 def readArff(filename):
     with open (filename, 'r') as f:
@@ -52,7 +57,12 @@ def preprocess_data(df):
 
     return xs, new_y
 
-def accuracy_score(y_true, y_pred):
+def accuracy_score(y_true, y_pred, verbose=False):
     """ Compare y_true to y_pred and return the accuracy """
     accuracy = np.sum(y_true == y_pred, axis=0) / len(y_true)
+    if verbose:
+        print("Percent classified correctly: {:.2f}% ({}/{})"
+              .format(100 * accuracy,
+              np.sum(y_true == y_pred, axis=0),
+              len(y_true)))
     return accuracy
