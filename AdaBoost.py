@@ -43,10 +43,15 @@ class AdaBoost:
             
             learner = DecisionStump(sample_X, sample_y)
             learner.learn()
+            
+            error = sum(weights[sample_y != learner.predictions]) / sum(weights)
+            if error > 0.5:
+                error = 1 - error
+                learner.class_val = -1
 
-            alpha = 0.5 * np.log((1 - learner.error + epsilon) / (learner.error + epsilon))
+            alpha = 0.5 * np.log((1 - error + epsilon) / (error + epsilon))
 
-            weights *= np.exp(-alpha * sample_y * learner.predictions)
+            weights *= np.exp(-alpha * sample_y * learner.predictions * learner.class_val)
             weights /= weights.sum()
 
             # save stump objects and alphas
@@ -69,7 +74,7 @@ class AdaBoost:
                     predictions[i] = -1 # switch predictions to -1 if p(1) < 0.5
 
             # Add predictions weighted by the classifiers alpha (alpha indicative of classifier's proficiency)
-            y_pred += alpha * predictions
+            y_pred += alpha * predictions * stump.class_val
 
         # Return sign of prediction sum
         y_pred = np.sign(y_pred).flatten()

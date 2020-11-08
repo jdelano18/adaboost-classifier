@@ -11,6 +11,7 @@ class DecisionStump:
         self.best_attribute = None
         self.tree = dict()
         self.predictions = None
+        self.class_val = 1
 
     def __str__(self):
         return f"""information_gain: {self.info_gain}, error: {self.error}, feature:{self.best_attribute}"""
