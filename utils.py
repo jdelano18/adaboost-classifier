@@ -12,7 +12,7 @@ def parse_filename():
     parser.add_argument("-K", "--k_folds", metavar="\b", type=int, default=None,
                         help="k-fold cross validation")
 
-    parser.add_argument("-T", metavar="\b", type=int, default=100,
+    parser.add_argument("-T", metavar="\b", type=int, default=20,
                         help="number of iterations")
     args = vars(parser.parse_args())
     return args

@@ -11,7 +11,6 @@ class DecisionStump:
         self.best_attribute = None
         self.tree = dict()
         self.predictions = None
-        self.true_label = 1
 
     def __str__(self):
         return f"""information_gain: {self.info_gain}, error: {self.error}, feature:{self.best_attribute}"""
@@ -60,11 +59,11 @@ class DecisionStump:
     def _predict(self):
         # predict values based on self.best_attribute
         attr = self.X[:, self.best_attribute]
-        self.predictions = np.ones(np.shape(self.y)) * self.true_label
+        self.predictions = np.ones(np.shape(self.y))
 
         for i, x_i in enumerate(attr):
             if self.tree[x_i] < 0.5:
-                self.predictions[i] = -1 * self.true_label
+                self.predictions[i] = -1
             # if == 0.5 then could break tie with majority over everything -- add in at the end
 
 
@@ -75,11 +74,7 @@ class DecisionStump:
         # calculate percent inaccuracy
         assert np.shape(self.predictions) == np.shape(self.y) # sanity check
         accuracy = np.sum(self.predictions == self.y, axis=0) / len(self.y)
-        error = 1 - accuracy
-        if error > 0.5:
-            error = 1 - error
-            self.true_label = -1
-        self.error = error
+        self.error = 1 - accuracy
 
     def learn(self):
         max_gain = float('-inf')

@@ -4,7 +4,7 @@ from DecisionStump import DecisionStump
 
 class AdaBoost:
 
-    def __init__(self, T=100):
+    def __init__(self, T=20):
         self.T = T
 
     def _resample(self, X, y, w):
