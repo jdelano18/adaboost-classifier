@@ -35,10 +35,12 @@ class AdaBoost:
         weights = np.ones(shape=n_instances) / n_instances
         # automatically use the whole data for first sample
         # since all weights are even
-        sample_X = X
-        sample_y = y
+#         sample_X = X
+#         sample_y = y
 
         for t in range(self.T):
+            sample_X, sample_y = self._resample(X, y, weights)
+            
             learner = DecisionStump(sample_X, sample_y)
             learner.learn()
 
@@ -46,9 +48,6 @@ class AdaBoost:
 
             weights *= np.exp(-alpha * sample_y * learner.predictions)
             weights /= weights.sum()
-
-            # use updated weights to resample
-            sample_X, sample_y = self._resample(X, y, weights)
 
             # save stump objects and alphas
             self.stumps[t] = learner
