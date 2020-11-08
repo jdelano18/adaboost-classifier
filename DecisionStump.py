@@ -65,7 +65,10 @@ class DecisionStump:
         for i, x_i in enumerate(attr):
             if self.tree[x_i] < 0.5:
                 self.predictions[i] = -1
-            # if == 0.5 then could break tie with majority over everything -- add in at the end
+
+            if self.tree[x_i] == 0.5:
+                # pick more probable class from overall class
+                self.predictions[i] = np.sign(np.sum(self.y))
 
 
     def _calculate_error(self):
